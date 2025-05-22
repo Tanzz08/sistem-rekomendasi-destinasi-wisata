@@ -72,18 +72,23 @@ Pada proyek ini, dataset yang digunakan berasal dari penyedia open dataset dari 
 ## Data Preparation
 Setelah menilai dari data tahap Data Understanding. Maka beberapa tahapan Data Preparation sebagai berikut: 
 1. Stemming Kalimat Desc, filter Stopwords dan Menggabungkan dalam variavbel 'Tags'
+   
    Stemming Kalimat Deskripsi, Filter Stopwords, dan Penggabungan ke dalam Variabel 'Tags'
 Pada dataset tourism_with_id.csv, terdapat kolom deskripsi yang berisi penjelasan mengenai masing-masing destinasi wisata. Teks pada kolom ini diproses dengan melakukan stemming untuk mengubah kata ke bentuk dasarnya dan filtering stopwords untuk menghilangkan kata-kata umum yang tidak memiliki makna signifikan (misalnya: "yang", "dan", "di", dll). Setelah tahap tersebut, kolom deskripsi digabungkan dengan kolom-kolom lain yang relevan seperti category ke dalam satu kolom baru bernama tags.
     > TF-IDF menjadi dasar perhitungan *cosine similarity* pada model content-based filtering, sehingga penting untuk         mengidentifikasi fitur-fitur unik dari setiap tempat wisata.
     
-3. TF-IDF Vectorizer
+2. TF-IDF Vectorizer
+   
    Setelah kolom tags terbentuk, dilakukan proses TF-IDF Vectorization untuk mengubah data teks menjadi representasi numerik vektor. Proses ini penting untuk mengukur bobot atay kepentingan suatu kata dalam satu destinasi dibandingkan dengan seluruh destinasi lainnya.
    > TF-IDF menjadi dasar perhitungan cosine similarity pada model content-based filtering, segingga untuk mengidentifikasi fitur-fitur unik dari setiap tempat wisata
    
-5. Encoding
+3. Encoding
+   
    Untuk model collaborative filtering berbasis deep learning, diperlukan data input dalam bentuk numerik. Oleh karena itu, dilakukan proses **encoding** pada ID pengguna dan ID tempat wisata agar dapat diterima oleh model.
    > Proses ini membantu memetakan nilai kategori (user dan item) ke dalam format numerik yang dapat digunakan dalam embendding layer dari model deep learning
-7. Splitting Data 80:20
+   
+4. Splitting Data 80:20
+   
    Pada data tourism_rating.csv, data dibagi menjadi 80% data latih dan 20% data uji. pembagian ini dilakukan untuk mengukur peforma model collaborative filtering dengan akurasi yang lebih realistis. Data latih digunakan untuk melatih model, sementara data uji digunakan untuk mengevaluasi model setelah pelatihan.
    > Pembagian data ini penting untuk menghindari overfitting serta untuk menguji generalisasi model terhadap data baru
 ## Modeling
