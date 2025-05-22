@@ -57,12 +57,15 @@ Pada proyek ini, dataset yang digunakan berasal dari penyedia open dataset dari 
 ### Exploratory Data Analysis
 1. Melihat Count Traveler berdasarkan Usia
    ![Screenshot 1](img/count%20travel%20age.png)
+
    Max age traveler adalah usia 30 tahun. dan di lanjut dengan usia gen z hingga milenial
 3. Melihat Distribusi Lokasi User
    ![Screenshot 2](img/distribusi%20lokasi.png)
+
    Sebgaian besar user berlokasi di Bekasi, Semarang, Cirebon, dan Yogyakarta
 5. Melihat Correlation Matrix dari penggabungan data tourism rating dan tourism with id
    ![Screenshot 3](img/corr%20matrix.png)
+
    terlihat beberapa variabel yang memiliki Positive Correlations dan Negative Correlations
    
 
@@ -99,6 +102,7 @@ Proyek ini dilakukan pembuatan sistem rekomendasi untuk memberikan Top-N rekomen
    - Tidak bisa merekomendasikan tempat baru jika belum pernah ada interaksi
    - Rekomendasi terbatas pada kemiripan fitur, tidak mempertimbangkan preferensi kolektif pengguna lain
     #### Output
+    ![Screenshot 4](img/cbf.png)
 
 ### 2. **Collbaoritve Filtering (Deep Learning)**
 Pendekatan ini memanfaatkan interaksi pengguna dan tempat wisata dalam bentuk rating, menggunakan pendekataan pembelajaran mendalam (deep learning) untuk mempelajari hubungan laten antara pengguna dan item
@@ -109,7 +113,8 @@ Pendekatan ini memanfaatkan interaksi pengguna dan tempat wisata dalam bentuk ra
   - User dan Place Bias: Tambahan bias untuk menyesuaikan prediksi nilai rating yang lebih realistis
   - Dot Product: Menghitung kesamaan antara user dan place dengan menggunakan operasi dot product antar embedding
     **Proses Pelatihan**
-
+    ![Screenshot 6](img/arsitektur%20model.png)
+    ![Screenshot 7](img/model%20compile.png)
     Model di compile dengan fungsi loss Binary Crossentropy, menggunakan optimizer Adam dengan learning rate 0.001, serta metrik evaluasi Root Mean Squared Error (RMSE) untuk mengukur akurasi prediksi
    #### Kelebihan:
    - Mampu menangkap relasi kompleks
@@ -119,6 +124,9 @@ Pendekatan ini memanfaatkan interaksi pengguna dan tempat wisata dalam bentuk ra
    - Masalah Cold Start
    - Memerlukan banyak data pelatihan
    - Interpretasi model sulit
+
+   #### Output
+   ![Screenshot 5](img/collaboraitve.png)
 
 ## Evaluation
 Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
