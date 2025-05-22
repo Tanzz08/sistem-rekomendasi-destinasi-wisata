@@ -101,8 +101,8 @@ Proyek ini dilakukan pembuatan sistem rekomendasi untuk memberikan Top-N rekomen
    #### Kekurangan:
    - Tidak bisa merekomendasikan tempat baru jika belum pernah ada interaksi
    - Rekomendasi terbatas pada kemiripan fitur, tidak mempertimbangkan preferensi kolektif pengguna lain
-    #### Output
-    ![Screenshot 4](img/cbf.png)
+#### Output
+![Screenshot 4](img/cbf.png)
 
 ### 2. **Collbaoritve Filtering (Deep Learning)**
 Pendekatan ini memanfaatkan interaksi pengguna dan tempat wisata dalam bentuk rating, menggunakan pendekataan pembelajaran mendalam (deep learning) untuk mempelajari hubungan laten antara pengguna dan item
