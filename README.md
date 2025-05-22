@@ -56,13 +56,13 @@ Pada proyek ini, dataset yang digunakan berasal dari penyedia open dataset dari 
 
 ### Exploratory Data Analysis
 1. Melihat Count Traveler berdasarkan Usia
-   
+   ![Screenshot 1](img/count%20travel%20age.png)
    Max age traveler adalah usia 30 tahun. dan di lanjut dengan usia gen z hingga milenial
 3. Melihat Distribusi Lokasi User
-   
+   ![Screenshot 2](img/distribusi%20lokasi.png)
    Sebgaian besar user berlokasi di Bekasi, Semarang, Cirebon, dan Yogyakarta
 5. Melihat Correlation Matrix dari penggabungan data tourism rating dan tourism with id
-   
+   ![Screenshot 3](img/corr%20matrix.png)
    terlihat beberapa variabel yang memiliki Positive Correlations dan Negative Correlations
    
 
