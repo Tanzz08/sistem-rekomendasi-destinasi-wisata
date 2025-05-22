@@ -164,13 +164,6 @@ Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, probl
 
 ### Interpretasi Nilai RMSE
 - Nilai RMSE sebesar 0.36 mengindikasikan prediksi rating yang diberikan oleh model rata-rata meleset sebesar 0.36 dari rating sebenarnya dalam skala [0, 1]
-- Nilai ini menunjjukkan bahwa model cukup akurat dalam memahami preferensi pengguna terhadap tempat wisata, dan cukup baik dalam melakukan generalisasi terhadap data uji. 
+- Nilai ini menunjukkan bahwa model cukup akurat dalam memahami preferensi pengguna terhadap tempat wisata, dan cukup baik dalam melakukan generalisasi terhadap data uji. 
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
 
-**---Ini adalah bagian akhir laporan---**
-
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
