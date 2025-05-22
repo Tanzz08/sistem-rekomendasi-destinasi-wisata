@@ -115,6 +115,7 @@ Pendekatan ini memanfaatkan interaksi pengguna dan tempat wisata dalam bentuk ra
     **Proses Pelatihan**
     ![Screenshot 6](img/arsitektur%20model.png)
     ![Screenshot 7](img/model%20compile.png)
+
     Model di compile dengan fungsi loss Binary Crossentropy, menggunakan optimizer Adam dengan learning rate 0.001, serta metrik evaluasi Root Mean Squared Error (RMSE) untuk mengukur akurasi prediksi
    #### Kelebihan:
    - Mampu menangkap relasi kompleks
@@ -129,9 +130,36 @@ Pendekatan ini memanfaatkan interaksi pengguna dan tempat wisata dalam bentuk ra
    ![Screenshot 5](img/collaboraitve.png)
 
 ## Evaluation
-Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
+Untuk mengevaluasi peforma sistem rekomendasi yang dibangun, metrik yang digunakan adalah Root Mean Squared Error (RMSE). Pemilihan metrik ini sesuai dengan karakteristik data dan tujuan model, yaitu untuk mengukur seberapa dekat prediksi rating sistem terhadap rating aktual dari pengguna
+
+### Alasan Pemilihan RMSE
+RMSE dipilih karena: 
+- Cocok untuk masalah regresei seperti prediksi rating dalam sistem rekomendasi 
+- Memberikan penalti yang lebih besar terhadap kesalahan predisksi yang besar, sehingga mendorong model untuk lebih akurat pada semua prediksi
+- Banyak digunakan dalam evaluasi sistem collaborative filtering, sehingga memudahkan perbandingan antar pendekatan
+
+### Rumus RMSE
+
+RMSE dihitung dengan rumus berikut:
+
+$$
+\text{RMSE} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2 }
+$$
+
+Di mana:
+- $\hat{y}_i$ = nilai prediksi (predicted rating)
+- $y_i$ = nilai aktual (actual rating)
+- $n$ = jumlah total data
 
 Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
+
+### Hasil Evaluasi
+![Screenshot RMSE](img/rmse.png)
+> **Catatan**: Untuk pendekatan content-based filtering, karena sistem ini tidak menghasilkan prediksi rating, maka evaluasi dilakuakn secara kualitatif, misalnya dengan melihat relevansi Top-N rekomendasi yang dihasilkan
+
+### Interpretasi Nilai RMSE
+- Nilai RMSE sebesar 0.36 mengindikasikan prediksi rating yang diberikan oleh model rata-rata meleset sebesar 0.36 dari rating sebenarnya dalam skala [0, 1]
+- Nilai ini menunjjukkan bahwa model cukup akurat dalam memahami preferensi pengguna terhadap tempat wisata, dan cukup baik dalam melakukan generalisasi terhadap data uji. 
 
 **Rubrik/Kriteria Tambahan (Opsional)**: 
 - Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
