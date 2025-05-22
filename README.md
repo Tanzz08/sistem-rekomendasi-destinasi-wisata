@@ -2,68 +2,123 @@
 
 ## Project Overview
 
-Pada bagian ini, Kamu perlu menuliskan latar belakang yang relevan dengan proyek yang diangkat.
+Indonesia merupakan negara kepulauan yang memiliki potensi wisata sangat besar dengan keberagaman destinasi, mulai dari wisata alam, budaya, sejarah, hingga wisata modern. Namun, berdasarkan data dari Kementerian Pariwisata, kontribusi sektor pariwisata terhadap PDB Indonesia masih lebih rendah dibandingkan negara tetangga seperti Thailand dan Malaysia (Suryani, 2018). Salah satu tantangan yang dihadapi adalah kurangnya pemerataan kunjungan wisatawan ke berbagai daerah di Indonesia. Bali, sebagai contoh, menyumbang lebih dari 40% kunjungan wisatawan mancanegara, sementara banyak daerah lain masih belum banyak tereksplorasi (Putra & Widodo, 2020).
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Jelaskan mengapa dan bagaimana masalah tersebut harus diselesaikan
-- Menyertakan hasil riset terkait atau referensi. Referensi yang diberikan harus berasal dari sumber yang kredibel dan author yang jelas.
-- Format Referensi dapat mengacu pada penulisan sitasi [IEEE](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf), [APA](https://www.mendeley.com/guides/apa-citation-guide/) atau secara umum seperti [di sini](https://penerbitdeepublish.com/menulis-buku-membuat-sitasi-dengan-mudah/)
-- Sumber yang bisa digunakan [Scholar](https://scholar.google.com/)
+Di sisi lain, dalam era digital, wisatawan cenderung melakukan pencarian informasi secara daring sebelum merencanakan perjalanan. Sebuah studi oleh Nugroho dan Lestari (2020) menyebutkan bahwa lebih dari 70% wisatawan domestik menggunakan aplikasi atau platform digital untuk mencari destinasi yang sesuai dengan preferensi mereka. Oleh karena itu, keberadaan sistem rekomendasi berbasis data menjadi sangat penting untuk membantu wisatawan menemukan destinasi yang relevan dan personal, serta mendorong pemerataan kunjungan ke berbagai wilayah.
+
+Dengan memanfaatkan pendekatan machine learning, khususnya content-based filtering dan collaborative filtering, sistem rekomendasi dapat memberikan saran destinasi berdasarkan minat pengguna maupun perilaku pengguna lain yang serupa (Resita & Hidayatullah, 2021). Sistem semacam ini juga diharapkan dapat meningkatkan efisiensi dalam perencanaan perjalanan dan memperkuat promosi destinasi wisata lokal secara digital.
 
 ## Business Understanding
-
-Pada bagian ini, Anda perlu menjelaskan proses klarifikasi masalah.
-
-Bagian laporan ini mencakup:
-
 ### Problem Statements
 
-Menjelaskan pernyataan masalah:
-- Pernyataan Masalah 1
-- Pernyataan Masalah 2
-- Pernyataan Masalah n
+Bagaimana cara merekomendasikan destinasi wisata yang relevan dan sesuai dengan preferensi pengguna untuk meningkatkan pengalaman perjalanan?
 
 ### Goals
+- Memberikan rekomendasi tempat wisata yang sesuai dengan minat pengguna
+- Menyediakan dua pendekatan sistem rekomendasi yaitu content-based filtering dan collaborative filtering
+- Meningkatkan relevansi dan personalisasi dalam pencarian destinasi wisata
 
-Menjelaskan tujuan proyek yang menjawab pernyataan masalah:
-- Jawaban pernyataan masalah 1
-- Jawaban pernyataan masalah 2
-- Jawaban pernyataan masalah n
-
-Semua poin di atas harus diuraikan dengan jelas. Anda bebas menuliskan berapa pernyataan masalah dan juga goals yang diinginkan.
-
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Menambahkan bagian “Solution Approach” yang menguraikan cara untuk meraih goals. Bagian ini dibuat dengan ketentuan sebagai berikut: 
-
-    ### Solution statements
-    - Mengajukan 2 atau lebih solution approach (algoritma atau pendekatan sistem rekomendasi).
+### Solution statements
+- Menerapakan **Content-Based Filtering**: Menggunakan cosine similarity untuk menghitung antar destinasi berdasarkan fitur tempat wisata
+- Menerapakan **Collaborative Filtering**: Menggunakan pendekatan deep learning untuk mempelajari pola rating dari pengguna terhadap tempat wisata
 
 ## Data Understanding
-Paragraf awal bagian ini menjelaskan informasi mengenai jumlah data, kondisi data, dan informasi mengenai data yang digunakan. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
+Pada proyek ini, dataset yang digunakan berasal dari penyedia open dataset dari situs [Kaggle-Indonesia Tourism Destination](https://www.kaggle.com/datasets/aprabowo/indonesia-tourism-destination/data). Dataset ini berisi sejumlah tempat wisata di 5 kota besar di Indonesia, yaitu Jakarta, Yogyakarta, Semarang, Bandung, dan  Surabaya.
 
-Selanjutnya, uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
+**Terdapat 4 file pada dataset ini, yaitu**:
+- **tourism_with_id.csv**: berisi informasi mengenai tempat-tempat wisata di 5 kota besar di Indonesia dengan total sekitar 400 entri.
+- **user.csv**: yang berisi data pengguna dummy yang digunakan untuk membangun fitur sistem rekomendasi berbasis pengguna.
+- **tourism_rating.csv**: yang terdiri dari 3 kolom, yaitu pengguna, tempat wisata, dan rating ayng diberikan; berfungsi untuk membangun sistem rekomendasi berbasis rating
+- **package_tourism.csv**: yang berisi rekomendasi tempat wisata terdekat berdasarkan waktu, biaya, dan rating. Namun kita tidak menggunakan data ini karena kita berfokus pada rekomendasi berdasarkan tempat yang disukai dan berbasis rating
 
-Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
+**Variabel-variabel pada dataset adalah sebagai berikut**:
+1. tourism_rating.csv:
+   - User_Id : id user
+   - Place_Id : id tempat wisata
+   - Place_Ratings : rating tempat wisata
+2. tourism_with_id.csv:
+   - Place_Id : id tempat wisata
+   - Place_Name : nama tempat wisata
+   - Description : deskripsi dari tempat wisata
+   - City : kota tempat wisata berada
+   - Price : Harga destinasi wisata
+   - Rating : rating dari tempat wisata
+   - Time_Minutes : destinasi waktu tempat wisata dalam menit
+   - Coordinate : kordinat tempat wisata
+   - Lat : latitude dari tempat wisata
+   - Long : longitude dari tempat wisata
+   - Unnamed: 11 : tak terdefenisi
+   - Unnamed: 12 : tak terdefenisi
+3. user.csv:
+   - User_Id : id user
+   - Location : lokasi pengguna
+   - Age : usia pengguna
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data beserta insight atau exploratory data analysis.
+### Exploratory Data Analysis
+1. Melihat Count Traveler berdasarkan Usia
+   
+   Max age traveler adalah usia 30 tahun. dan di lanjut dengan usia gen z hingga milenial
+3. Melihat Distribusi Lokasi User
+   
+   Sebgaian besar user berlokasi di Bekasi, Semarang, Cirebon, dan Yogyakarta
+5. Melihat Correlation Matrix dari penggabungan data tourism rating dan tourism with id
+   
+   terlihat beberapa variabel yang memiliki Positive Correlations dan Negative Correlations
+   
 
 ## Data Preparation
-Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
-
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
-
+Setelah menilai dari data tahap Data Understanding. Maka beberapa tahapan Data Preparation sebagai berikut: 
+1. Stemming Kalimat Desc, filter Stopwords dan Menggabungkan dalam variavbel 'Tags'
+   Stemming Kalimat Deskripsi, Filter Stopwords, dan Penggabungan ke dalam Variabel 'Tags'
+Pada dataset tourism_with_id.csv, terdapat kolom deskripsi yang berisi penjelasan mengenai masing-masing destinasi wisata. Teks pada kolom ini diproses dengan melakukan stemming untuk mengubah kata ke bentuk dasarnya dan filtering stopwords untuk menghilangkan kata-kata umum yang tidak memiliki makna signifikan (misalnya: "yang", "dan", "di", dll). Setelah tahap tersebut, kolom deskripsi digabungkan dengan kolom-kolom lain yang relevan seperti category ke dalam satu kolom baru bernama tags.
+    > TF-IDF menjadi dasar perhitungan *cosine similarity* pada model content-based filtering, sehingga penting untuk         mengidentifikasi fitur-fitur unik dari setiap tempat wisata.
+    
+3. TF-IDF Vectorizer
+   Setelah kolom tags terbentuk, dilakukan proses TF-IDF Vectorization untuk mengubah data teks menjadi representasi numerik vektor. Proses ini penting untuk mengukur bobot atay kepentingan suatu kata dalam satu destinasi dibandingkan dengan seluruh destinasi lainnya.
+   > TF-IDF menjadi dasar perhitungan cosine similarity pada model content-based filtering, segingga untuk mengidentifikasi fitur-fitur unik dari setiap tempat wisata
+   
+5. Encoding
+   Untuk model collaborative filtering berbasis deep learning, diperlukan data input dalam bentuk numerik. Oleh karena itu, dilakukan proses **encoding** pada ID pengguna dan ID tempat wisata agar dapat diterima oleh model.
+   > Proses ini membantu memetakan nilai kategori (user dan item) ke dalam format numerik yang dapat digunakan dalam embendding layer dari model deep learning
+7. Splitting Data 80:20
+   Pada data tourism_rating.csv, data dibagi menjadi 80% data latih dan 20% data uji. pembagian ini dilakukan untuk mengukur peforma model collaborative filtering dengan akurasi yang lebih realistis. Data latih digunakan untuk melatih model, sementara data uji digunakan untuk mengevaluasi model setelah pelatihan.
+   > Pembagian data ini penting untuk menghindari overfitting serta untuk menguji generalisasi model terhadap data baru
 ## Modeling
-Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan permasalahan. Sajikan top-N recommendation sebagai output.
+Proyek ini dilakukan pembuatan sistem rekomendasi untuk memberikan Top-N rekomendasi destinasi wisata kepada pengguna berdasarkan preferensi dan riwayat interaksi mereka. Sistem dibangun menggunakan dua pendekatan utama, yaitu:
+### 1. **Content-Based Filtering**
+   Pendekatan ini menggunakan informasi dari nama tempat destinasi wisata untuk merekomendasikan tempat-tempat yang mirip dengan yang disuaki ata pernah dinilai tinggi oleh pengguna.
+   #### Langkah-Langkah:
+   - Data deskripsi tempat wisata dibersihkan dan diproses
+   - Membuat kolom tags sebagai gabungan fitur deskripsi dan kategori
+   - Mencari kemiripan antar destinasi yang dihitung menggunakan Cosine Similarity
+   - Memberikan Top-N rekomendasi destinasi wisata yang paling mirip berdasarkan destinasi yang pernah disukai pengguna
+   #### Kelebihan:
+   - Mampu memberikan rekomendasi personal meskipun tanpa data pengguna lain
+   - Mudah diterapkan dan tidak memrlukan bannyak data historus pengguna
+   #### Kekurangan:
+   - Tidak bisa merekomendasikan tempat baru jika belum pernah ada interaksi
+   - Rekomendasi terbatas pada kemiripan fitur, tidak mempertimbangkan preferensi kolektif pengguna lain
+    #### Output
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menyajikan dua solusi rekomendasi dengan algoritma yang berbeda.
-- Menjelaskan kelebihan dan kekurangan dari solusi/pendekatan yang dipilih.
+### 2. **Collbaoritve Filtering (Deep Learning)**
+Pendekatan ini memanfaatkan interaksi pengguna dan tempat wisata dalam bentuk rating, menggunakan pendekataan pembelajaran mendalam (deep learning) untuk mempelajari hubungan laten antara pengguna dan item
+  #### Langkah-Langkah:
+  **Arsitektur Model**
+  - User Embedding Layer: Mengubah setiap user_id menjadi vektor berdimendsi 50 yang memrepresentasikan preferensi laten pengguna
+  - Place Embedding Layer: Mengubah setiap place_id menjadi vektor berdimensi 50 yang merepresentasikan karakteristik laten dari tempat wisata
+  - User dan Place Bias: Tambahan bias untuk menyesuaikan prediksi nilai rating yang lebih realistis
+  - Dot Product: Menghitung kesamaan antara user dan place dengan menggunakan operasi dot product antar embedding
+    **Proses Pelatihan**
+
+    Model di compile dengan fungsi loss Binary Crossentropy, menggunakan optimizer Adam dengan learning rate 0.001, serta metrik evaluasi Root Mean Squared Error (RMSE) untuk mengukur akurasi prediksi
+   #### Kelebihan:
+   - Mampu menangkap relasi kompleks
+   -  Fleksibel dan dapat dikembangkan lebih lanjut
+   -  Efisien untuk dataset besar
+   #### Kekurangan:
+   - Masalah Cold Start
+   - Memerlukan banyak data pelatihan
+   - Interpretasi model sulit
 
 ## Evaluation
 Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
