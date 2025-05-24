@@ -53,6 +53,28 @@ Pada proyek ini, dataset yang digunakan berasal dari penyedia open dataset dari 
    - User_Id : id user
    - Location : lokasi pengguna
    - Age : usia pengguna
+4. package_tourism.csv:
+   - Pakcage : paket destinasi wisata. ini adalah primary key
+   - City : Kota tempat wisata berada
+   - Place_Tourism1 : Tempat wisata pertama
+   - Place_Tourism2 : Tempat wisata Kedua
+   - Place_Tourism3 : Tempat wisata Ketiga
+   - Place_Tourism4 : Tempat wisata Keempat
+   - Place_Tourism5 : Tempat Wisata Kelima
+
+   **Kondisi Dataset**:
+   1. tourism_rating.csv: 
+      - Jumlah data = 10000 entries
+      - Missing Value = 0
+      - Duplikat = 0 
+   2. tourism_with_id.csv:
+      - Jumlah data = 437 entries
+      - Missing Value : 
+         - Time_Minutes = 232
+         - Unnamed: 11 = 437
+      - Duplikat = 0 
+
+
 
 ### Exploratory Data Analysis
 1. Melihat Count Traveler berdasarkan Usia

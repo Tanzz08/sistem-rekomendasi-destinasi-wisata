@@ -11,6 +11,8 @@ Original file is located at
 
 !pip install Sastrawi ##Used for stemming for indonesian language
 
+"""Menginstall library sastrawi yang akan digunakan untuk proses stemming"""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,6 +32,8 @@ from pathlib import Path
 
 stem = StemmerFactory().create_stemmer()
 stopword = StopWordRemoverFactory().create_stop_word_remover()
+
+"""Menginstall library yang umum digunakan dan inisialisasi stemmer dan stopword removal"""
 
 import os, shutil
 
@@ -54,7 +58,11 @@ os.chmod("/root/.kaggle/kaggle.json", 600)
 
 !kaggle datasets download aprabowo/indonesia-tourism-destination
 
+"""Mendownload dataset dari kaggle dengan perintah diatas"""
+
 !unzip indonesia-tourism-destination.zip
+
+"""unzip folder untuk mengekstrak file di dalamnya"""
 
 tourism_rating = pd.read_csv("tourism_rating.csv")
 tourism_with_id = pd.read_csv("tourism_with_id.csv")
@@ -64,7 +72,10 @@ dflist = [tourism_rating, tourism_with_id, user]
 for i in dflist:
   display(i)
 
-"""# Data Preprocessing"""
+"""load data yang telah di download dan di ekstrak
+
+# Data Preprocessing
+"""
 
 tourism_rating.info()
 
@@ -75,14 +86,21 @@ tourism_with_id.info()
 
 user.info()
 
-"""## Merge Data Rating dan Tourism with ID"""
+"""tiga cell diatas untuk melihat info dari data yang digunakan seperti data type, jumlah entri, dll
+
+## Merge Data Rating dan Tourism with ID
+"""
 
 data_recommendation = pd.merge(tourism_rating.groupby('Place_Id')['Place_Ratings'].mean(), tourism_with_id, on='Place_Id')
 data_recommendation
 
+"""Melakukan merge data rating dan tourism with id untuk melihat keterkaitan antar variabel nantinya. data ini juga sangat memungkinkan digunakan unutk content based filtering nantinya"""
+
 data_recommendation.info()
 
-"""# Exploratory Data Analysis
+"""melihat info data setelah melakukan merge data
+
+# Exploratory Data Analysis
 
 ## Melihat Count Traveler berdasarkan Usia
 """
@@ -94,7 +112,10 @@ plt.xlabel("Usia")
 plt.ylabel("Count")
 plt.show
 
-"""## Melihat Distribusi Lokasi User"""
+"""dapat dilihat distribusi data berdasarkan jumlah traveler dari usianya. dapat dilihat traveler terbanyak adalah usia 30 tahun
+
+## Melihat Distribusi Lokasi User
+"""
 
 plt.figure(figsize=(10, 5))
 sns.countplot(x="Location", data=user, palette='viridis')
@@ -104,7 +125,10 @@ plt.ylabel("Count")
 plt.xticks(rotation=90)
 plt.show
 
-"""## Correlation Matrix data_recommendation"""
+"""cell ini unutk melihat penyebaran data lokasi user. sebagian besat user berlokasi di bekasi, semarang, cirebon dan yogyakarta
+
+## Correlation Matrix data_recommendation
+"""
 
 # Inisilisasi corr matrix
 correlation_matrix = data_recommendation.select_dtypes(include=['float64', 'int64']).corr()
@@ -114,6 +138,8 @@ plt.figure(figsize=(10, 8))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
 plt.title('Correlation Matrix')
 plt.show()
+
+"""terlihat beberapa variabel yang memiliki positve correlations dan negative correlations yang cukup kuat"""
 
 # Find the strongest positive and negative correlations
 strongest_positive_corr = correlation_matrix.unstack().sort_values().drop_duplicates().tail(5)
@@ -125,9 +151,11 @@ print(strongest_positive_corr)
 print("\nStrongest Negative Correlations:")
 print(strongest_negative_corr)
 
-"""# Data Preparation
+"""berikut adalah uraian correlations terkuat baik itu positive dan negative correlations.
 
-## Stemming kalimat & Membuat Variabel 'Tags'
+# Data Preparation
+
+## Stemming kalimat, Filter Stopwords & Membuat Variabel 'Tags'
 """
 
 # fungsi untuk preprocessing data
@@ -137,13 +165,18 @@ def preprocessing(data):
   data = stopword.remove(data)
   return data
 
+"""fungsi untuk melakukan preprocessing kalimat"""
+
 data_cbf = data_recommendation.copy()
 data_cbf['Tags'] = data_cbf['Description'] + ' ' + data_cbf['Category']
 data_cbf = data_cbf.drop(columns=['Description', 'Category', 'Price', 'Place_Ratings', 'City'])
 data_cbf['Tags'] = data_cbf['Tags'].apply(preprocessing)
 data_cbf
 
-"""## TF-IDF Vectorizer"""
+"""membuat kolom bari bernama 'Tags' sebagai overview destinasi wisata. variabel ini berisikian value kolom 'Description' dan 'Category'. kemudian menampung data baru di variabel data_cbf yang telah melewati proses drop variabel yang saya anggap perlu untuk di drop karena sudah tidak dibutuhkan.
+
+## TF-IDF Vectorizer
+"""
 
 # Inisialisasi TfidfVectorizer
 vectorizer = TfidfVectorizer(max_features=5000)
@@ -157,7 +190,9 @@ print(tfidf_matrix)
 # Melihat ukuran matrix tfidf
 tfidf_matrix.shape
 
-"""# Modeling Pendekatan Content-Based Filtering
+"""dua cell diatas digunakan untuk melakukan vectorizer yang sangat berguna karena data kita menggunakan data teks dan kita akan mencari similarity untuk pendekatan content-based filtering
+
+# Modeling Pendekatan Content-Based Filtering
 
 ## Cosine Similarity
 """
@@ -166,12 +201,16 @@ tfidf_matrix.shape
 cosine_sim = cosine_similarity(tfidf_matrix)
 cosine_sim
 
+"""menghitung cosine similarity dari data untuk mendapatkan kesamaan antara data yang nantinya digunakan untuk mendapatkan rekomendasi"""
+
 # membuat dataframe dari variabel cosine_sim dengan baris dan kolom berupa nama tempat wisata
 cosine_sim_df = pd.DataFrame(cosine_sim, index=data_cbf['Place_Name'], columns=data_cbf['Place_Name'])
 print('Shape:', cosine_sim_df.shape)
 
 # menampilkan cosine_sim_df pada setiap place name
 cosine_sim_df.sample(5, axis=1).sample(10, axis=0)
+
+"""membuat datafram dari variabel cosine_sim dengan baris dan kolom berupa tempat wisata. kemudian menampilkan sampel cosine_sim_df"""
 
 def place_recommendations(place_name, similarity_data=cosine_sim_df, items=data_cbf[['Place_Name', 'Tags']], k=5):
     # Mengambil data dengan menggunakan argpartition untuk melakukan partisi secara tidak langsung sepanjang sumbu yang diberikan
@@ -187,16 +226,24 @@ def place_recommendations(place_name, similarity_data=cosine_sim_df, items=data_
 
     return pd.DataFrame(closest).merge(items).head(k)
 
-"""## Mendapatkan Rekomendasi"""
+"""modeling fungsi untuk mendapatkan rekomendasi. dengan menggunakan argpartition, kita mengambil sejumlah nilai k tertinggi dari similarity data. kemudian kita mengambil data dari bobot tertinggi ke terendah. berikutnya kita perlu menghapus place_name yang dicarai agar tidak muncul dalam rekomendasi
+
+## Mendapatkan Rekomendasi
+"""
 
 place_recommendations('Pantai Nglambor')
 
-"""# Modeling Collaborative Filtering"""
+"""terlihat beberapa destinasi wisata yang kita dapatkan sebagai rekomendasi berdasarkan tempat 'Pantai Nglambor'
+
+# Modeling Collaborative Filtering
+"""
 
 df = tourism_rating.copy()
 df
 
-"""## Data Preparation
+"""copy touris_rating dan dimasukkan ke variabel df agar data yang digunakan bisa di manipulasi lebih lanjut tanpa mengganggu data sebelumnya
+
+## Data Preparation
 
 ### Encoding
 """
@@ -213,6 +260,8 @@ print('encoded User_Id : ', user2user_encoded)
 user_encoded2user = {i: x for i, x in enumerate(user_ids)}
 print('encoded angkak ke User_Id: ', user2user_encoded)
 
+"""kita melakuakn encoding pada kolom User_Id, untuk mengubah nilai user ID yang bersifat unik menjadi representasi numerik agar dapat digunakan dalam model machine learning"""
+
 # Mengubah Place_Id menjadi tanpa nilai yang sama
 place_ids = df['Place_Id'] .unique().tolist()
 print('list Place_Id: ', place_ids)
@@ -225,12 +274,16 @@ print('encoded Place_Id : ', place2place_encoded)
 place_encoded2place = {i: x for i, x in enumerate(place_ids)}
 print('encoded angkak ke Place_Id: ', place2place_encoded)
 
+"""hal yang sama dilakukan pada kolom Place_Id untuk mengubah nilai place ID yang bersifat unik menjadi representasi numerik agar dapat digunakan dalam model machine learning"""
+
 # Mapping User_Id ke dataframe user
 df['user'] = df['User_Id'].map(user2user_encoded)
 
 # Mapping Place_Id ke dataframe tempat wisata
 df['place'] = df['Place_Id'].map(place2place_encoded)
 df
+
+"""Kode tersebut digunakan untuk menambahkan kolom baru pada DataFrame df yang berisi hasil encoding dari User_Id dan Place_Id. Melalui map(), kolom User_Id diubah menjadi kolom user menggunakan dictionary user2user_encoded, sedangkan kolom Place_Id diubah menjadi kolom place menggunakan place2place_encoded. Ini penting agar model machine learning, terutama yang berbasis embedding seperti neural collaborative filtering, bisa bekerja dengan data numerik terstruktur alih-alih ID string yang tidak bisa langsung diproses oleh model"""
 
 # Mendapatkan jumlah user
 num_users = len(user2user_encoded)
@@ -250,11 +303,16 @@ print('Number of User: {}, Number of Place: {}, Min Rating: {}, Max Rating: {}'.
     num_users, num_place, min_rating, max_rating
 ))
 
-"""### Spliting Data"""
+"""disini kita mendapatkan informasi dasar mengenai data yang akan digunakan model. pertama num_users dan num_place menghitung jumlah unik pengguna dan tempat wisata berdsarkan hasil encoding sebelumnya. kemudian, min_rating, dan max_rating digunakan unutk mengetahui nilai rating yang diberikan pengguna terhadap tempat wisata. informasi ini penting dalam membangun dan menyesuaikan model, terutama untuk proses normalisasi rating atau sebagai referensi dalam evaluasi peforma model
+
+### Spliting Data
+"""
 
 # Mengacak dataset
 df = df.sample(frac=1, random_state=42)
 df
+
+"""sebelum splitting data kita melakukan pengacakan terlebih dahulu. menginsialisasi random_state agar mendapatkan data yang konsisten"""
 
 # Membuat variabel x untuk mencocokkaan data user dan place menjadi satu value
 x = df[['user', 'place']].values
@@ -273,7 +331,10 @@ X_train, X_val, y_train, y_val = (
 
 print(x, y)
 
-"""## Training Model"""
+"""kita membagi data train dan validation dalam ratio 80:20. yaitu 80 persen data training dan 20 persen data validation
+
+## Training Model
+"""
 
 class RecommenderNet(tf.keras.Model):
   # Inisialisasi fungsi
@@ -309,6 +370,8 @@ class RecommenderNet(tf.keras.Model):
 
     return tf.nn.sigmoid(x)
 
+"""Pada tahap ini, model menghitung skor kecocokan antara pengguna dan tourism place dengan teknik embedding. Pertama, kita melakukan proses embedding terhadap data user dan place. selanjutnya, lakukan operasi perkalian dot product antara embedding user dan place. selain itu, kita juga fapat menambahkan bias unutk setiap user dan place. skor kecocokan diterapkan dalam skala [0,1] dengan fungsi aktivasi sigmoid"""
+
 # Inisialisasi Model
 model = RecommenderNet(num_users, num_place, 50)
 
@@ -319,6 +382,8 @@ model.compile(
     metrics=[tf.keras.metrics.RootMeanSquaredError()]
 )
 
+"""model ini menggunakan Binary Crossentropy unutk menghitung loss function, Adam sebagai optimizer, dan RMSE sebagai metrics evaluation"""
+
 # Train model
 history = model.fit(
     x = X_train,
@@ -328,7 +393,10 @@ history = model.fit(
     validation_data = (X_val, y_val)
 )
 
-"""## Evaluasi & Visualisasi"""
+"""dari hasil training kita dapat rmse yang cukup memuaskan yaitu di angka 0.36
+
+## Evaluasi & Visualisasi
+"""
 
 plt.plot(history.history['root_mean_squared_error'])
 plt.plot(history.history['val_root_mean_squared_error'])
@@ -337,6 +405,8 @@ plt.ylabel('root_mean_squared_error')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
+
+"""dari hasil visualisasi, terdapat skor rmse yang berbeda antara tes dan train. loss sangat rendah pada train dan naik di saat data test. ada kemungkinan model overfitting namun saya rasa cukup memusakan akan hasil ini"""
 
 place_df = data_cbf
 
@@ -357,6 +427,8 @@ user_place_array = np.hstack(
 )
 
 place_df
+
+"""disini kita menyiapkan data input bagi model rekomendasi, dengan fokus pada destinasi wisata yang belum dikunjungi oleh seorang pengguna tertentu."""
 
 ratings = model.predict(user_place_array).flatten()
 
@@ -390,3 +462,5 @@ print('----' * 8)
 recommended_place = place_df[place_df['Place_Id'].isin(recommended_place_ids)]
 for row in recommended_place.itertuples():
     print(row.Place_Name, ':', row.Tags)
+
+"""dapat dilihat model dapat memberikan rekomendasi yang dipersonalisasi bagi pengguna berdasarkan tempat yang belum pernah di kunjungi"""
